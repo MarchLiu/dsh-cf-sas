@@ -1,0 +1,12 @@
+# dsh-security-audit bundle patch: insert the audit engine service.
+# Install: dsh plugin --profile web add /Users/mars/jobs/dsh-cf-sas
+# Verify:  dsh --profile web --dump-config | grep security-audit
+# Note: JS changes require a dsh restart (cordis-plugin-hmr is disabled by default).
+- insert:
+    - id: security-audit
+      name: dsh-security-audit
+      inject: [subagents]
+      config:
+        # outputRoot: ~/security-audit-runs   (default; never inside a target repo)
+        # subagentProvider: spawn
+        # sandbox: { allowRuncFallback: true }

@@ -1,0 +1,14 @@
+# Rust-toolchain variant of the security-audit sandbox for target builds.
+# Same restrictions apply at run time via run-audit-sandbox.sh (network none,
+# read-only rootfs, tmpfs /work scratch, ro target bind, resource limits).
+FROM rust:1-slim-bookworm
+
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends \
+    ca-certificates git ripgrep jq python3 clang libssl-dev pkg-config \
+  && rm -rf /var/lib/apt/lists/* \
+  && rustup component add clippy 2>/dev/null || true
+
+RUN useradd --create-home --shell /bin/bash sandbox
+USER sandbox
+WORKDIR /work

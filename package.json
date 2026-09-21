@@ -1,0 +1,30 @@
+{
+  "name": "dsh-security-audit",
+  "description": "Autonomous six-phase security audit engine for DSH: vendored cloudflare/security-audit-skill + sandboxed execution + subagent orchestration",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "src/plugin/index.js",
+  "exports": {
+    ".": "./src/plugin/index.js",
+    "./package.json": "./package.json"
+  },
+  "engines": { "node": ">=22" },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "files": [
+    "src",
+    "vendor",
+    "assets",
+    "cordis.patch.yml",
+    "package.json"
+  ],
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.2",
+    "@deepseek-ai/dsh-subagent": "^0.1.5-rc.2",
+    "@deepseek-ai/dsh-tools": "^0.1.5-rc.2"
+  }
+}
