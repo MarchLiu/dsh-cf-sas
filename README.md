@@ -1,5 +1,8 @@
 # dsh-security-audit
 
+[![Publish to npm](https://github.com/MarchLiu/dsh-cf-sas/actions/workflows/publish.yml/badge.svg)](https://github.com/MarchLiu/dsh-cf-sas/actions/workflows/publish.yml)
+[![npm version](https://img.shields.io/npm/v/dsh-security-audit.svg)](https://www.npmjs.com/package/dsh-security-audit)
+
 将 [cloudflare/security-audit-skill](https://github.com/cloudflare/security-audit-skill) 从
 "prompt 技能 + 手工沙箱"升级为自治编排的 **DSH plugin**。
 

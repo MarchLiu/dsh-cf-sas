@@ -45,6 +45,13 @@ jobs:
             echo "publish=true" >> "$GITHUB_OUTPUT"
             echo "will publish $NAME@$VERSION"
           fi
+      - name: Verify NPM_TOKEN validity (clear error on expiry)
+        run: |
+          if ! npm whoami >/dev/null 2>&1; then
+            echo "::error::NPM_TOKEN is invalid or EXPIRED. Create a new Automation token on npmjs.com and run: gh secret set NPM_TOKEN -R MarchLiu/dsh-cf-sas"
+            exit 1
+          fi
+          echo "token OK (publisher: $(npm whoami))"
       - name: Publish
         if: steps.check.outputs.publish == 'true'
         run: npm publish --provenance --access public
