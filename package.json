@@ -2,7 +2,6 @@
   "name": "dsh-security-audit",
   "description": "Autonomous six-phase security audit engine for DSH: vendored cloudflare/security-audit-skill + sandboxed execution + subagent orchestration",
   "version": "0.1.0",
-  "private": true,
   "type": "module",
   "main": "src/plugin/index.js",
   "exports": {
