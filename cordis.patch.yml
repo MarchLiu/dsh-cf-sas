@@ -5,7 +5,7 @@
 - insert:
     - id: security-audit
       name: dsh-security-audit
-      inject: [subagents]
+      inject: [tools, subagents]
       config:
         # outputRoot: ~/security-audit-runs   (default; never inside a target repo)
         # subagentProvider: spawn

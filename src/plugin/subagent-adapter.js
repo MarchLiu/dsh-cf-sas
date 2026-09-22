@@ -6,10 +6,14 @@ import { settleRun } from '@deepseek-ai/dsh-subagent';
 /**
  * @param {object} opts
  * @param {object} opts.subagents   ctx.subagents (SubagentRuntime)
+ * @param {object} opts.parent      delegating Agent (exec.agent) — required by
+ *                                  SubagentStartRequest; providers derive
+ *                                  workspace/lineage/depth from its session.
  * @param {string} [opts.provider]  "spawn" (default) | "fork"
  * @param {AbortSignal} [opts.signal]
  */
-export function makeSubagentAdapter({ subagents, provider = 'spawn', signal }) {
+export function makeSubagentAdapter({ subagents, parent, provider = 'spawn', signal }) {
+  if (!parent) throw new Error('subagent-adapter: parent Agent (exec.agent) is required');
   return {
     /**
      * @returns {Promise<{ok: boolean, json: object|null, raw: string, error?: string}>}
@@ -20,6 +24,7 @@ export function makeSubagentAdapter({ subagents, provider = 'spawn', signal }) {
         outcome = await settleRun(await subagents.start(provider, {
           label: `audit:${kind}:${agentId}`,
           prompt: [{ type: 'text', text: payload }],
+          parent,
           ...(signal ? { signal } : {}),
         }));
       } catch (e) {

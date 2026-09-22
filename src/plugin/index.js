@@ -29,16 +29,17 @@ const pluginRoot = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const activeRuns = new Map(); // runId → { controller, startedAt }
 
 export function apply(ctx, config = {}) {
+  config = config ?? {}; // host passes null when no `config:` block is set in the bundle patch
   const log = ctx.logger?.('security-audit') ?? console;
   log.info?.('security-audit plugin starting');
 
   const outputRootFor = () => config.outputRoot
     ?? join(process.env.HOME ?? process.cwd(), 'security-audit-runs');
 
-  async function newEngine(signal) {
+  async function newEngine(signal, parentAgent) {
     const driver = await selectLocalDriver(config.sandbox ?? {});
     return new Orchestrator({
-      subagents: makeSubagentAdapter({ subagents: ctx.subagents, provider: config.subagentProvider ?? 'spawn', signal }),
+      subagents: makeSubagentAdapter({ subagents: ctx.subagents, parent: parentAgent, provider: config.subagentProvider ?? 'spawn', signal }),
       driver,
       pluginRoot,
       outputRoot: outputRootFor(),
@@ -56,9 +57,13 @@ export function apply(ctx, config = {}) {
       budget: { type: 'number', description: 'Max agent calls (default 40).' },
       scope: { type: 'string', description: 'Optional scope statement.' },
     },
-  }, async (args) => {
+  }, async (args, exec) => {
+    // exec.agent is the delegating Agent — SubagentStartRequest requires it as
+    // `parent` (providers derive workspace/lineage/depth from its session).
+    const parent = exec?.agent;
+    if (!parent) return { error: 'audit_start must be called from an agent tool context (exec.agent missing)' };
     const controller = new AbortController();
-    const engine = await newEngine(controller.signal);
+    const engine = await newEngine(controller.signal, parent);
     const created = await engine.createRun({
       target: args.target,
       profile: args.profile ?? 'standard',
@@ -134,9 +139,9 @@ function require_tool(name_, { description, parameters }, fn) {
     description,
     parameters,
     output: {
-      schema: { type: 'object' },
+      schema: { type: 'object', additionalProperties: true },
       render: (_a, v) => [{ type: 'text', text: JSON.stringify(v, null, 2) }],
     },
-    execute: fn,
+    execute: (args, exec) => fn(args, exec),
   });
 }
