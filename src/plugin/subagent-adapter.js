@@ -30,7 +30,7 @@ export function makeSubagentAdapter({ subagents, parent, provider = 'spawn', sig
       } catch (e) {
         return { ok: false, json: null, raw: '', error: String(e?.message ?? e) };
       }
-      const raw = outcome.output ?? '';
+      const raw = outcome.result ?? outcome.output ?? '';
       if (outcome.status !== 'completed') {
         return { ok: false, json: null, raw, error: outcome.detail ?? `status ${outcome.status}` };
       }
