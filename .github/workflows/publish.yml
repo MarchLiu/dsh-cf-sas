@@ -52,6 +52,8 @@ jobs:
             exit 1
           fi
           echo "token OK (publisher: $(npm whoami))"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Publish
         if: steps.check.outputs.publish == 'true'
         run: npm publish --provenance --access public
