@@ -1,7 +1,7 @@
 {
   "name": "dsh-security-audit",
   "description": "Autonomous six-phase security audit engine for DSH: vendored cloudflare/security-audit-skill + sandboxed execution + subagent orchestration",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "type": "module",
   "main": "src/plugin/index.js",
   "exports": {
@@ -25,7 +25,7 @@
   ],
   "peerDependencies": {
     "@deepseek-ai/cordis": "^4.0.2",
-    "@deepseek-ai/dsh-subagent": "^0.1.5-rc.2 || ^0.2.0-rc.1",
-    "@deepseek-ai/dsh-tools": "^0.1.5-rc.2 || ^0.2.0-rc.1"
+    "@deepseek-ai/dsh-subagent": "^0.1.5-rc.2 || ^0.2.0-rc.1 || ^0.2.2-rc.1",
+    "@deepseek-ai/dsh-tools": "^0.1.5-rc.2 || ^0.2.0-rc.1 || ^0.2.2-rc.1"
   }
 }
